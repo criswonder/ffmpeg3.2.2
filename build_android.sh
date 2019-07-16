@@ -1,7 +1,7 @@
-#!/bin/bash
+!/bin/bash
 echo "进入编译ffmpeg脚本"
 #5.0
-NDK=/Users/hongyun/Downloads/android-ndk-r14b
+NDK=../android-ndk-r14b
 PLATFORM=$NDK/platforms/android-21/arch-arm
 TOOLCHAIN=$NDK/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64
 CPU=armv7-a
@@ -20,37 +20,26 @@ echo "开始编译ffmpeg"
 --extra-cflags="$CFLAG" \
 --cc=$TOOLCHAIN/bin/arm-linux-androideabi-gcc \
 --nm=$TOOLCHAIN/bin/arm-linux-androideabi-nm \
---disable-shared \
+--disable-everything \
 --enable-static \
 --enable-runtime-cpudetect \
 --enable-gpl \
 --enable-cross-compile \
---disable-doc \
---disable-ffmpeg \
---disable-ffplay \
---disable-ffprobe \
---disable-postproc \
---disable-avdevice \
---disable-symver \
---disable-encoders \
---disable-everything \
 --enable-encoder=mpeg4 \
 --disable-decoders \
 --enable-decoder=mjpeg \
 --disable-muxers \
+--enable-muxer=mp4 \
 --disable-protocols \
 --enable-protocol=file \
 --disable-demuxers \
---enable-demuxer=image2 \
 --enable-demuxer=h264 \
+--enable-mediacodec \
+--disable-debug \
+--enable-small \
 --enable-asm \
 --enable-neon \
 --enable-jni \
---enable-mediacodec \
---enable-debug=3 \
---disable-optimizations \
---disable-stripping \
---disable-asm \
 --enable-hwaccel=h264_mediacodec \
 --enable-decoder=h264_mediacodec
 echo "configure 结束"
@@ -83,6 +72,11 @@ $PREFIX/lib/libswscale.a \
 -lc -lm -lz -ldl -llog \
 $TOOLCHAIN/lib/gcc/arm-linux-androideabi/4.9.x/libgcc.a
 
+echo "original $(openssl dgst ../out/libav_thirdparty.so)"
+echo "dst      $(openssl dgst android/armv7-a/libav_thirdparty.so)"
+
+rm -rf ../out/libav_thirdparty.so
+cp android/armv7-a/libav_thirdparty.so ../out/
 ###########################################################
 #echo "编译不支持neon和硬解码"
 #CPU=armv7-a
