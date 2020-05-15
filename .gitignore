@@ -1,4 +1,5 @@
 *.a
+.DS_store
 .vscode
 *.o
 *.o.*
